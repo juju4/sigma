@@ -8,7 +8,7 @@ cache: pip
 
 install:
   - pip install -r tools/requirements-devel.txt 
-  - pip install .
+  - pip install tools/
 
 script:
   - for f in `find rules -iname '*.yml'`; do

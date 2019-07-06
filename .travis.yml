@@ -10,6 +10,6 @@ install:
   - pip install -r tools/requirements-devel.txt 
 
 script:
-  - for f in `find rules -iname '*.yml'`; do \
-      sigmac --target sumologic -c tools/config/sumologic.yml $f; \
+  - for f in `find rules -iname '*.yml'`; do
+      sigmac --target sumologic -c tools/config/sumologic.yml $f;
     done

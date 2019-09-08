@@ -231,7 +231,7 @@ class SumoLogicBackend(SingleTextQueryBackend):
                 val = re.sub(r'\\"\*$', '\\\\\\"*', val)
         # if not key and not (val.startswith('"') and val.endswith('"')) and not (val.startswith('(') and val.endswith(')')) and not ('|' in val) and val:
         # apt_babyshark.yml
-        if not (val.startswith('"') and val.endswith('"')) and not (val.startswith('(') and val.endswith(')')) and not ('|' in val) and not ('*' in val) and val and not '_index' in key and not '_sourceCategory' in key and not '_view' in key:
+        if not (val.startswith('"') and val.endswith('"')) and not (val.startswith('(') and val.endswith(')')) and not ('*' in val) and val and not '_index' in key and not '_sourceCategory' in key and not '_view' in key:
             val = '"%s"' % val
         return val
 

@@ -104,4 +104,7 @@ logsources:
   application-spring:
     product: spring
     index: SPRING
+  compliance-qualys:
+    product: Qualys
+    index: QUALYS
 # if no index, search in all indexes

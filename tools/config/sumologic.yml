@@ -57,6 +57,13 @@ logsources:
     conditions: 
       EventChannel: Microsoft-Windows-DHCP-Server
     index: WINDOWS
+  windows-process_creation:
+    category: process_creation
+    product: windows
+    conditions:
+      EventID:
+        - 4688
+        - 1
   apache:
     product: apache
     service: apache

@@ -221,6 +221,9 @@ class SumoLogicBackend(SingleTextQueryBackend):
         if key:
             val = re.sub(r'\"', '\\"', str(val))
             val = re.sub(r'(.+)\*(.+)', '"\g<1>"*"\g<2>"', val, 0)
+            if ' ' in val:
+                val = re.sub(r'^\*', '*"', val)
+                val = re.sub(r'\*$', '"*', val)
             # if unbalanced wildcard?
             if val.startswith('*"') and not (val.endswith('"*') or val.endswith('"')):
                 val = val + '"'

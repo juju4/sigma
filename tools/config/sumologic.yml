@@ -24,6 +24,10 @@ logsources:
     product: linux
     service: clamav
     index: LINUX
+  linux-auditd:
+    product: linux
+    service: auditd
+    index: AUDITD
   windows:
     product: windows
     index: WINDOWS

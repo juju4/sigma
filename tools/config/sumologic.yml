@@ -58,7 +58,7 @@ logsources:
   windows-dhcp:
     product: windows
     service: dhcp
-    conditions: 
+    conditions:
       EventChannel: Microsoft-Windows-DHCP-Server
     index: WINDOWS
   windows-process_creation:
@@ -107,10 +107,6 @@ logsources:
     index: DJANGO
   application-rails:
     product: rails
-    index: RAILS
-  application-rails:
-    category: application
-    product: ruby_on_rails
     index: RAILS
   application-spring:
     product: spring

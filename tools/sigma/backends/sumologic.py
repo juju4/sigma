@@ -157,6 +157,7 @@ class SumoLogicBackend(SingleTextQueryBackend, MultiRuleOutputMixin):
             if after is not None:
                 result += after
 
+        self.queries[rulename] = dict()
         # adding parenthesis here in case 2 rules are aggregated together - ex: win_possible_applocker_bypass
         # but does not work if count, where or other piped statements...
         if '|' in result:
@@ -180,6 +181,7 @@ class SumoLogicBackend(SingleTextQueryBackend, MultiRuleOutputMixin):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.queries = []
         # TODO/FIXME! depending on deployment configuration, existing FER must be populate here (or backend config?)
         aFL = ["_sourceCategory", "_view", "_sourceName"]
         if self.sigmaconfig.config.get("afl_fields"):

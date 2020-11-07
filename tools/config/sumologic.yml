@@ -119,4 +119,10 @@ logsources:
   compliance-qualys:
     product: Qualys
     index: QUALYS
+  cloudtrail:
+    product: cloudtrail
+    index: CLOUDTRAIL
+  zeek:
+    product: zeek
+    index: ZEEK
 # if no index, search in all indexes

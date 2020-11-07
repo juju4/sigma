@@ -120,7 +120,7 @@ logsources:
     product: Qualys
     index: QUALYS
   cloudtrail:
-    product: cloudtrail
+    service: cloudtrail
     index: CLOUDTRAIL
   zeek:
     product: zeek

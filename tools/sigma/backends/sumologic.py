@@ -54,54 +54,58 @@ class SumoLogicBackend(SingleTextQueryBackend):
     mapListValueExpression = "%s IN %s"
     interval = None
     logname = None
+    aggregates = list()
 
     def generateAggregation(self, agg):
         # lnx_shell_priv_esc_prep.yml
-        # print("DEBUG generateAggregation(): %s, %s, %s, %s" % (agg.aggfunc_notrans, agg.aggfield, agg.groupfield, agg.cond_op))
+        # print("DEBUG generateAggregation(): %s, %s, %s, %s" % (agg.aggfunc_notrans, agg.aggfield, agg.groupfield, str(agg)))
+
+        # Below we defer output of the actual aggregation commands until the rest of the query is built.
+        # We do this because aggregation commands like count will cause data to be lost that isn't counted
+        # and we want all search terms/query conditions processed first before we aggregate.
         if agg.groupfield == 'host':
             agg.groupfield = 'hostname'
         if agg.aggfunc_notrans == 'count() by':
             agg.aggfunc_notrans = 'count by'
         if agg.aggfunc == SigmaAggregationParser.AGGFUNC_NEAR:
-            raise NotImplementedError("The 'near' aggregation operator is not yet implemented for this backend")
-        if self.keypresent:
-            if not agg.groupfield:
-                if agg.aggfield:
-                    agg.aggfunc_notrans = "count_distinct"
-                    return " \n| %s(%s) \n| where _count_distinct %s %s" % (
-                        agg.aggfunc_notrans, agg.aggfield, agg.cond_op, agg.condition)
-                else:
-                    return "  \n| %s | where _count %s %s" % (
-                    agg.aggfunc_notrans, agg.cond_op, agg.condition)
-            elif agg.groupfield:
-                if agg.aggfield:
-                    agg.aggfunc_notrans = "count_distinct"
-                    return " \n| %s(%s) by %s \n| where _count_distinct %s %s" % (
-                        agg.aggfunc_notrans, agg.aggfield, agg.groupfield, agg.cond_op, agg.condition)
-                else:
-                    return " \n| %s by %s \n| where _count %s %s" % (
-                        agg.aggfunc_notrans, agg.groupfield, agg.cond_op, agg.condition)
-            else:
-                return " \n| %s | where _count %s %s" % (agg.aggfunc_notrans, agg.cond_op, agg.condition)
+            # WIP
+            # ex:
+            # (QUERY) | timeslice 5m
+            # | count_distinct(process) _timeslice,hostname
+            # | where _count_distinct > 5
+            current_agg = " | timeslice %s | count_distinct(%s) %s | where _count_distinct > 0" % (self.interval, agg.current[0], "by _timeslice," + agg.current[0] )
+        if self.keypresent and not agg.groupfield and agg.aggfield:
+            agg.aggfunc_notrans = "count_distinct"
+            current_agg = " \n| %s(%s) \n| where _count_distinct %s %s" % (
+            agg.aggfunc_notrans, agg.aggfield, agg.cond_op, agg.condition)
+        elif self.keypresent and not agg.groupfield and not agg.aggfield:
+            current_agg = "  \n| %s | where _count %s %s" % (
+            agg.aggfunc_notrans, agg.cond_op, agg.condition)
+        elif self.keypresent and agg.groupfield and agg.aggfield:
+             agg.aggfunc_notrans = "count_distinct"
+             current_agg = " \n| %s(%s) by %s \n| where _count_distinct %s %s" % (
+             agg.aggfunc_notrans, agg.aggfield, agg.groupfield, agg.cond_op, agg.condition)
+        elif self.keypresent and agg.groupfield and notagg.aggfield:
+            current_agg = " \n| %s by %s \n| where _count %s %s" % (
+            agg.aggfunc_notrans, agg.groupfield, agg.cond_op, agg.condition)
+        elif not self.keypresent and not agg.groupfield and agg.aggfield:
+            agg.aggfunc_notrans = "count_distinct"
+            current_agg = " \n| parse \"[%s=*]\" as searched nodrop\n| %s(searched) \n| where _count_distinct %s %s" % (
+                agg.aggfield, agg.aggfunc_notrans, agg.cond_op, agg.condition)
+        elif not self.keypresent and not agg.groupfield and not agg.aggfield:
+            current_agg = " \n| %s | where _count %s %s" % (
+                agg.aggfunc_notrans, agg.cond_op, agg.condition)
+        elif not self.keypresent and agg.groupfield and agg.aggfield:
+            agg.aggfunc_notrans = "count_distinct"
+            current_agg = " \n| parse \"[%s=*]\" as searched nodrop\n| parse \"[%s=*]\" as grpd nodrop\n| %s(searched) by grpd \n| where _count_distinct %s %s" % (
+                agg.aggfield, agg.groupfield, agg.aggfunc_notrans, agg.cond_op, agg.condition)
+        elif not self.keypresent and agg.groupfield and not agg.aggfield:
+            current_agg = " \n| parse \"[%s=*]\" as grpd nodrop\n| %s by grpd \n| where _count %s %s" % (
+                agg.groupfield, agg.aggfunc_notrans, agg.cond_op, agg.condition)
         else:
-            if not agg.groupfield:
-                if agg.aggfield:
-                    agg.aggfunc_notrans = "count_distinct"
-                    return " \n| parse \"[%s=*]\" as searched nodrop\n| %s(searched) \n| where _count_distinct %s %s" % (
-                        agg.aggfield, agg.aggfunc_notrans, agg.cond_op, agg.condition)
-                else:
-                    return " \n| %s | where _count %s %s" % (
-                    agg.aggfunc_notrans, agg.cond_op, agg.condition)
-            elif agg.groupfield:
-                if agg.aggfield:
-                    agg.aggfunc_notrans = "count_distinct"
-                    return " \n| parse \"[%s=*]\" as searched nodrop\n| parse \"[%s=*]\" as grpd nodrop\n| %s(searched) by grpd \n| where _count_distinct %s %s" % (
-                        agg.aggfield, agg.groupfield, agg.aggfunc_notrans, agg.cond_op, agg.condition)
-                else:
-                    return " \n| parse \"[%s=*]\" as grpd nodrop\n| %s by grpd \n| where _count %s %s" % (
-                        agg.groupfield, agg.aggfunc_notrans, agg.cond_op, agg.condition)
-            else:
-                return " \n| %s | where _count %s %s" % (agg.aggfunc_notrans, agg.cond_op, agg.condition)
+            current_agg = " \n| %s | where _count %s %s" % (agg.aggfunc_notrans, agg.cond_op, agg.condition)
+    self.aggregates.append(current_agg)
+    return ""
 
     def generateBefore(self, parsed):
         # not required but makes query faster, especially if no FER or _index/_sourceCategory
@@ -110,6 +114,10 @@ class SumoLogicBackend(SingleTextQueryBackend):
         return ""
 
     def generate(self, sigmaparser):
+        rulename = self.getRuleName(sigmaparser)
+        # Get time frame if exists
+        interval = sigmaparser.parsedyaml["detection"].setdefault("timeframe", "15m")
+
         try:
             self.product = sigmaparser.parsedyaml['logsource']['product']   # OS or Software
         except KeyError:
@@ -148,12 +156,26 @@ class SumoLogicBackend(SingleTextQueryBackend):
             if after is not None:
                 result += after
 
-            # adding parenthesis here in case 2 rules are aggregated together - ex: win_possible_applocker_bypass
-            # but does not work if count, where or other piped statements...
-            if '|' in result:
-                return result
-            else:
-                return result
+        # adding parenthesis here in case 2 rules are aggregated together - ex: win_possible_applocker_bypass
+        # but does not work if count, where or other piped statements...
+        if '|' in result:
+            self.queries[rulename]['query'] = result
+        else:
+            self.queries[rulename]['query'] = '('+ result + ')'
+
+        # if aggregates were specified
+        # output them last in the query because Sumologic aggregates are lossy operations and
+        # you generally want them toward the end of a query
+        if self.aggregates:
+            # WIP
+            # Consider adding any fields listed in the 'columns' to each 'count by' commands
+
+            # deduplicate any aggregates
+            aggs = list(set(self.aggregates))
+            temp = self.queries[rulename]['query'] + "".join(aggs)
+            self.queries[rulename]['query'] = temp
+
+        return self.queries[rulename]['query']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

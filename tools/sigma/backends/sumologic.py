@@ -21,6 +21,7 @@ import sys
 from sigma.backends.base import SingleTextQueryBackend
 from sigma.backends.exceptions import NotSupportedError
 from sigma.parser.condition import ConditionOR, SigmaAggregationParser
+from .mixins import RulenameCommentMixin, MultiRuleOutputMixin
 
 # Sumo specifics
 # https://help.sumologic.com/05Search/Search-Query-Language

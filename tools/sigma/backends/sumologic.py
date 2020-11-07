@@ -104,8 +104,8 @@ class SumoLogicBackend(SingleTextQueryBackend):
                 agg.groupfield, agg.aggfunc_notrans, agg.cond_op, agg.condition)
         else:
             current_agg = " \n| %s | where _count %s %s" % (agg.aggfunc_notrans, agg.cond_op, agg.condition)
-    self.aggregates.append(current_agg)
-    return ""
+        self.aggregates.append(current_agg)
+        return ""
 
     def generateBefore(self, parsed):
         # not required but makes query faster, especially if no FER or _index/_sourceCategory

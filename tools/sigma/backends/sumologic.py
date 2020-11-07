@@ -32,7 +32,7 @@ from .mixins import RulenameCommentMixin, MultiRuleOutputMixin
 # For some strings like Windows ProcessCmdline or LogonProcess, it might be good to force case lower and upper as Windows is inconsistent in logs
 
 
-class SumoLogicBackend(SingleTextQueryBackend):
+class SumoLogicBackend(SingleTextQueryBackend, MultiRuleOutputMixin):
     """Converts Sigma rule into SumoLogic query. Contributed by SOC Prime. https://socprime.com"""
     identifier = "sumologic"
     active = True

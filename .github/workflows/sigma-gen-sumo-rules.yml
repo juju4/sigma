@@ -19,6 +19,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r tools/requirements.txt -r tools/requirements-devel.txt
+        pip install tools/
     - name: Generate sumo queries
       run: |
         for f in `find rules* -iname '*.yml'`; do

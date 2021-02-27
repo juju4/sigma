@@ -24,5 +24,5 @@ jobs:
       run: |
         for f in `find rules* -iname '*.yml'`; do
           echo "== rule $f";
-          sigmac --target sumologic -c tools/config/sumologic.yml $f;
+          sigmac --target sumologic -c tools/config/sumologic.yml $f || true;
         done

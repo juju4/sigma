@@ -1,0 +1,28 @@
+
+name: Sigma - Generate sumo-cse queries
+
+on:
+  push:
+    branches:
+      - "*"
+
+jobs:
+  test-sumo:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.8
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r tools/requirements.txt -r tools/requirements-devel.txt
+        pip install tools/
+    - name: Generate sumo queries
+      run: |
+        for f in `find rules* -iname '*.yml'`; do
+          echo "== rule $f";
+          sigmac --target sumologic -c tools/config/sumologic-cse.yml $f || true;
+        done

@@ -7,7 +7,7 @@ on:
       - "*"
 
 jobs:
-  test-sumo:
+  test-sumo-cse:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -24,5 +24,6 @@ jobs:
       run: |
         for f in `find rules* -iname '*.yml'`; do
           echo "== rule $f";
-          sigmac --target sumologic -c tools/config/sumologic-cse.yml $f || true;
+          sigmac --target sumologic-cse -c tools/config/sumologic-cse.yml $f || true;
+          sigmac --target sumologic-cse-rule -c tools/config/sumologic-cse.yml $f || true;
         done

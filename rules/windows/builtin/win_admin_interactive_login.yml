@@ -12,7 +12,6 @@ tags:
     - attack.lateral_movement
 logsource:
     product: windows
-    service: security
 detection:
     selection:
         EventID: 4624

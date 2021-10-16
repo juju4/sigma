@@ -1,4 +1,3 @@
-action: global
 title: Invoke-Obfuscation COMPRESS OBFUSCATION
 id: 175997c5-803c-4b08-8bb0-70b099f47595
 description: Detects Obfuscated Powershell via COMPRESS OBFUSCATION
@@ -16,28 +15,12 @@ tags:
 falsepositives:
     - unknown
 level: medium
-detection:
-    selection:
-        ImagePath|re: '(?i).*new-object.*(?:system\.io\.compression\.deflatestream|system\.io\.streamreader).*text\.encoding\]::ascii.*readtoend'
-    condition: selection and selection_eventid
----
 logsource:
     product: windows
     service: system
 detection:
     selection_eventid:
         EventID: 7045
----
-logsource:
-    product: windows
-    category: driver_load
-detection:
-    selection_eventid:
-        EventID: 6
----
-logsource:
-    product: windows
-    service: security
-detection:
-    selection_eventid:
-        EventID: 4697 
+    selection:
+        ImagePath|re: '(?i).*new-object.*(?:system\.io\.compression\.deflatestream|system\.io\.streamreader).*text\.encoding\]::ascii.*readtoend'
+    condition: selection and selection_eventid

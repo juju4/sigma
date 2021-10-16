@@ -13,6 +13,7 @@ references:
     - https://www.hexacorn.com/blog/2017/10/04/running-programs-via-proxy-jumping-on-a-edr-bypass-trampoline-part-2/
     - https://www.hexacorn.com/blog/2017/10/22/running-programs-via-proxy-jumping-on-a-edr-bypass-trampoline-part-3/
     - https://twitter.com/mattifestation/status/930821225311555584
+    - https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/T1127.001/T1127.001.md
 author: juju4
 date: 2019/01/16
 modified: 2020/09/01

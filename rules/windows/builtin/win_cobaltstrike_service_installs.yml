@@ -5,8 +5,9 @@ author: Florian Roth, Wojciech Lesicki
 references:
     - https://www.sans.org/webcasts/119395
     - https://www.crowdstrike.com/blog/getting-the-bacon-from-cobalt-strike-beacon/
+    - https://thedfirreport.com/2021/08/29/cobalt-strike-a-defenders-guide/
 date: 2021/05/26
-modified: 2021/08/09
+modified: 2021/09/21
 tags:
     - attack.execution
     - attack.privilege_escalation
@@ -21,18 +22,18 @@ detection:
     selection_id:
         EventID: 7045
     selection1:
-        ServiceFileName|contains|all: 
+        ImagePath|contains|all: 
             - 'ADMIN$'
             - '.exe'
     selection2:
-        ServiceFileName|contains|all: 
+        ImagePath|contains|all: 
             - '%COMSPEC%'
             - 'start'
             - 'powershell'
     selection3:
-        ServiceFileName|contains: 'powershell -nop -w hidden -encodedcommand'
+        ImagePath|contains: 'powershell -nop -w hidden -encodedcommand'
     selection4:
-        ServiceFileName|base64offset|contains: "IEX (New-Object Net.Webclient).DownloadString('http://127.0.0.1:"
+        ImagePath|base64offset|contains: "IEX (New-Object Net.Webclient).DownloadString('http://127.0.0.1:"
     condition: selection_id and (selection1 or selection2 or selection3 or selection4)
 falsepositives:
     - Unknown

@@ -24,7 +24,9 @@ class SigmaRuleFilter:
             "high"     : 2,
             "critical" : 3
             }
-    STATES = ["experimental", "testing", "stable"]
+    STATES = ["experimental",
+              "test",
+              "stable"]
 
     def __init__(self, expr):
         self.minlevel      = None
@@ -65,7 +67,7 @@ class SigmaRuleFilter:
                 if self.status not in self.STATES:
                     raise SigmaRuleFilterParseException("Unknown status '%s' in condition '%s'" % (self.status, cond))
             elif cond.startswith("tlp="):
-                self.tlp = cond[cond.index("=") + 1:].upper()  #tlp is allways uppercase
+                self.tlp = cond[cond.index("=") + 1:].upper()  #tlp is always uppercase
             elif cond.startswith("target="):
                 self.target = cond[cond.index("=") + 1:].lower() # lower to make caseinsensitive
             elif cond.startswith("logsource="):

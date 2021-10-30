@@ -9,8 +9,8 @@ references:
 author: Markus Neis, @markus_neis, Florian Roth
 tags:
   - attack.execution
-  - cve.2021-1675
-  - cve.2021-34527
+  - cve.2021.1675
+  - cve.2021.34527
 date: 2021/07/04
 modified: 2021/07/28
 logsource:

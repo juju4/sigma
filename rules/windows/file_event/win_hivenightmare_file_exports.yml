@@ -13,9 +13,9 @@ logsource:
     product: windows
     category: file_event
 tags:
-    - cve.2021-36934
     - attack.credential_access
     - attack.t1552.001
+    - cve.2021.36934
 detection:
     selection:
         - TargetFilename|contains: 

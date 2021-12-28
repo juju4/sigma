@@ -1,10 +1,12 @@
-title: Suspicious Shells Spawn by Java
-id: 0d34ed8b-1c12-4ff2-828c-16fc860b766d
-description: Detects suspicious shell spawn from Java host process (e.g. log4j exploitation)
+title: Suspicious Shells Spawn by Java Utility Keytool
+id: 90fb5e62-ca1f-4e22-b42e-cc521874c938
+description: Detects suspicious shell spawn from Java utility keytool process (e.g. adselfservice plus exploitation)
 status: experimental
-author: Andreas Hunkeler (@Karneades), Florian Roth
-date: 2021/12/17
-modified: 2021/12/22
+author: Andreas Hunkeler (@Karneades)
+date: 2021/12/22
+references:
+    - https://redcanary.com/blog/intelligence-insights-december-2021
+    - https://www.synacktiv.com/en/publications/how-to-exploit-cve-2021-40539-on-manageengine-adselfservice-plus.html
 tags:
     - attack.initial_access
     - attack.persistence
@@ -14,8 +16,9 @@ logsource:
     product: windows
 detection:
     selection:
-        ParentImage|endswith: '\java.exe'
+        ParentImage|endswith: '\keytool.exe'
         Image|endswith:
+            - '\cmd.exe'
             - '\sh.exe'
             - '\bash.exe'
             - '\powershell.exe'
@@ -28,16 +31,14 @@ detection:
             - '\scrcons.exe'
             - '\regsvr32.exe'
             - '\hh.exe'
-            - '\wmic.exe'        # https://app.any.run/tasks/c903e9c8-0350-440c-8688-3881b556b8e0/
+            - '\wmic.exe'
             - '\mshta.exe'
             - '\rundll32.exe'
             - '\forfiles.exe'
             - '\scriptrunner.exe'
             - '\mftrace.exe'
             - '\AppVLP.exe'
-            - '\curl.exe'
     condition: selection
 falsepositives:
-    - Legitimate calls to system binaries
-    - Company specific internal usage
+    - unknown
 level: high

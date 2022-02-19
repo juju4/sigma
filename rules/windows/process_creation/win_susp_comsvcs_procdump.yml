@@ -27,10 +27,9 @@ fields:
   - ParentCommandLine
 falsepositives:
   - unknown
-level: medium
+level: high
 tags:
   - attack.defense_evasion
   - attack.t1218.011
   - attack.credential_access
   - attack.t1003.001
-  - attack.t1003        # an old one

@@ -16,7 +16,7 @@ detection:
     CommandLine|contains: '\Windows\Caches\NavShExt.dll '
   selection2:
     CommandLine|endswith: '\AppData\Roaming\MICROS~1\Windows\Caches\NavShExt.dll,Setting'
-  condition: 1 of them
+  condition: 1 of selection*
 falsepositives:
   - Unknown
 level: critical
@@ -25,5 +25,4 @@ tags:
   - attack.g0050
   - attack.s0081
   - attack.execution
-  - attack.t1059   # an old one
   - attack.t1059.003

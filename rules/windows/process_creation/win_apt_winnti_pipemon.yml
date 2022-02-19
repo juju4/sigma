@@ -21,12 +21,11 @@ detection:
       - '-x:0'
       - '-x:1'
       - '-x:2'
-  condition: 1 of them
+  condition: 1 of selection*
 falsepositives:
   - Legitimate setups that use similar flags
 level: critical
 tags:
   - attack.defense_evasion
   - attack.t1574.002
-  - attack.t1073    # an old one
   - attack.g0044

@@ -12,7 +12,6 @@ modified: 2021/06/27
 tags:
     - attack.execution
     - attack.t1204.002
-    - attack.t1204  # an old one
     - attack.t1047
     - attack.impact
     - attack.t1490
@@ -35,7 +34,7 @@ detection:
     selection3: 
         CommandLine|endswith: 'shadowcopy delete'
         CommandLine|contains: '\..\..\system32'
-    condition: 1 of them
+    condition: 1 of selection*
 fields:
     - ComputerName
     - User

@@ -7,7 +7,7 @@ status: experimental
 description: Detects process access to LSASS memory with suspicious access flags
 author: Florian Roth
 date: 2021/11/22
-modified: 2021/12/03
+modified: 2022/02/18
 references:
     - https://docs.microsoft.com/en-us/windows/win32/procthread/process-security-and-access-rights
     - https://onedrive.live.com/view.aspx?resid=D026B4699190F1E6!2843&ithint=file%2cpptx&app=PowerPoint&authkey=!AMvCRTKB_V1J5ow
@@ -17,7 +17,6 @@ references:
 tags:
     - attack.credential_access
     - attack.t1003.001
-    - attack.t1003  # an old one
     - attack.s0002
 logsource:
     category: process_access
@@ -60,6 +59,10 @@ detection:
             - 'C:\WINDOWS\system32\taskhostw.exe'
             - 'C:\Users\\*\AppData\Local\Programs\Microsoft VS Code\Code.exe'
             - 'C:\Program Files\Windows Defender\MsMpEng.exe'
+            - 'C:\Windows\SysWOW64\msiexec.exe'
+            - 'C:\Windows\System32\msiexec.exe'
+            - 'C:\Windows\System32\lsass.exe'
+            - 'C:\WINDOWS\System32\perfmon.exe'
     # Windows Defender
     filter2:
         SourceImage|startswith: 'C:\ProgramData\Microsoft\Windows Defender\'
@@ -68,15 +71,16 @@ detection:
     filter3:
         SourceImage|startswith: 'C:\Program Files\WindowsApps\'
         SourceImage|endswith: '\GamingServices.exe'
-        GrantedAccess: 
+        GrantedAccess:
             - '0x1410'
             - '0x410'
+            - '0x1040'
     # Process Explorer
     filter4:
-        SourceImage|endswith: 
+        SourceImage|endswith:
             - '\PROCEXP64.EXE'
             - '\PROCEXP.EXE'
-        GrantedAccess: 
+        GrantedAccess:
             - '0x1410'
             - '0x410'
     # VMware Tools
@@ -85,25 +89,40 @@ detection:
         SourceImage|endswith: '\vmtoolsd.exe'
     # Antivirus and EDR agents
     filter6:
-        SourceImage|startswith: 
+        SourceImage|startswith:
             - 'C:\Progra Files\'
             - 'C:\Progra Files (x86)\'
-        SourceImage|contains: 
+        SourceImage|contains:
             - 'Antivirus'
     filter7:
         SourceImage: 'C:\WINDOWS\system32\wbem\wmiprvse.exe'
-        GrantedAccess: 
+        GrantedAccess:
             - '0x1410'
             - '0x410'
+    filter8:
+        SourceImage: 'C:\Windows\sysWOW64\wbem\wmiprvse.exe'
+        GrantedAccess: '0x1010'
+    filter_mrt:
+        SourceImage: 'C:\WINDOWS\system32\MRT.exe'
+        GrantedAccess: '0x1418'
     # Generic Filter for 0x1410 filter (caused by so many programs like DropBox updates etc.)
     filter_generic:
-        SourceImage|startswith: 
+        SourceImage|startswith:
             - 'C:\Program Files\'
             - 'C:\Program Files (x86)\'
             - 'C:\WINDOWS\system32\'
-        GrantedAccess: 
+        GrantedAccess:
             - '0x1410'
             - '0x410'
+    filter_localappdata:
+        SourceImage|contains|all:
+            - 'C:\Users\'
+            - '\AppData\Local\'
+        SourceImage|endswith:
+            - '\Microsoft VS Code\Code.exe'
+            - '\software_reporter_tool.exe'
+            - '\DropboxUpdate.exe'
+        GrantedAccess: '0x410'
     condition: selection and not 1 of filter*
 fields:
     - User

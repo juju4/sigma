@@ -10,7 +10,6 @@ modified: 2021/09/19
 tags:
     - attack.credential_access
     - attack.t1003.001
-    - attack.t1003  # an old one
 logsource:
     category: process_creation
     product: windows
@@ -19,7 +18,7 @@ detection:
         Image|contains: '\CreateMiniDump.exe'
     selection2:
         Imphash: '4a07f944a83e8a7c2525efa35dd30e2f'
-    condition: 1 of them
+    condition: 1 of selection*
 falsepositives:
     - Unknown
 level: high

@@ -8,7 +8,7 @@ references:
   - https://www.pinvoke.net/default.aspx/dbghelp/MiniDumpWriteDump.html
   - https://medium.com/@fsx30/bypass-edrs-memory-protection-introduction-to-hooking-2efb21acffd6
 date: 2019/10/27
-modified: 2021/11/27
+modified: 2022/02/09
 logsource:
   category: image_load
   product: windows
@@ -20,9 +20,9 @@ detection:
     Image|endswith:
       - '\msbuild.exe'
       - '\cmd.exe'
-      - '\svchost.exe'
+      # - '\svchost.exe'  triggered by installing common software
       - '\rundll32.exe'
-      - '\powershell.exe'
+      # - '\powershell.exe'  triggered by installing common software
       - '\word.exe'
       - '\excel.exe'
       - '\powerpnt.exe'
@@ -34,7 +34,7 @@ detection:
       - '\wscript.exe'
       - '\cscript.exe'
       - '\mshta.exe'
-      - '\regsvr32.exe'
+      # - '\regsvr32.exe'  triggered by installing common software
       - '\schtasks.exe'
       - '\dnx.exe'
       - '\regsvcs.exe'
@@ -47,9 +47,14 @@ detection:
     Signed: 'FALSE'
   filter1:
     - Image|contains: 'Visual Studio'
-    - CommandLine|contains: '-k LocalSystemNetworkRestricted'
+    - CommandLine|contains: 
+      - '-k LocalSystemNetworkRestricted'
+      - '-k UnistackSvcGroup -s WpnUserService'
   filter2:   # Not available in Sysmon, but in Aurora
-    CommandLine: 'C:\WINDOWS\winsxs\*\TiWorker.exe -Embedding'
+    CommandLine: 
+      - 'C:\WINDOWS\winsxs\*\TiWorker.exe -Embedding'
+      - 'C:\Windows\system32\svchost.exe -k netsvcs -p -s wuauserv'
+      - 'C:\WINDOWS\System32\svchost.exe -k WerSvcGroup'
   condition: (signedprocess or unsignedprocess) and not filter1 and not filter2
 fields:
   - ComputerName
@@ -61,5 +66,4 @@ falsepositives:
 level: high
 tags:
   - attack.credential_access
-  - attack.t1003            # an old one
   - attack.t1003.001

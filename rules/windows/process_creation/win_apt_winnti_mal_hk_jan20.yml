@@ -27,12 +27,11 @@ detection:
   selection5:
     ParentImage|startswith: 'C:\ProgramData\DRM\Windows'
     Image|endswith: '\SearchFilterHost.exe'
-  condition: 1 of them
+  condition: 1 of selection*
 falsepositives:
   - Unlikely
 level: critical
 tags:
   - attack.defense_evasion
   - attack.t1574.002
-  - attack.t1073    # an old one
   - attack.g0044

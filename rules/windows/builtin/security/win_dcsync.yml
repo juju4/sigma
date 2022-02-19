@@ -11,7 +11,6 @@ references:
 tags:
     - attack.credential_access
     - attack.s0002
-    - attack.t1003          # an old one
     - attack.t1003.006
 logsource:
     product: windows
@@ -30,7 +29,7 @@ detection:
             - 'MSOL_'
     filter3:
         SubjectUserName|endswith: '$'
-    condition: selection and not filter1 and not filter2 and not filter3
+    condition: selection and not 1 of filter*
 falsepositives:
     - Valid DC Sync that is not covered by the filters; please report
     - Local Domain Admin account used for Azure AD Connect

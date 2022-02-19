@@ -11,8 +11,6 @@ modified: 2021/05/11
 tags:
     - attack.credential_access
     - attack.t1555
-    - attack.t1003  # an old one
-    - attack.t1503  # an old one
 logsource:
     category: process_creation
     product: windows
@@ -23,7 +21,7 @@ detection:
         Image|endswith: 'PasswordDump.exe'
     selection3:
         OriginalFileName|endswith: 'PasswordDump.exe'
-    condition: 1 of them
+    condition: 1 of selection*
 falsepositives:
     - unlikely
 level: critical

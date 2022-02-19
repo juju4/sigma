@@ -249,16 +249,22 @@ logsources:
     service: application
     sources:
       - "WinEventLog:Application"
+    fieldmappings:
+      Provider_Name: Provider.Name
   windows-security:
     product: windows
     service: security
     sources:
       - "WinEventLog:Security"
+    fieldmappings:
+      Provider_Name: Provider.Name
   windows-system:
     product: windows
     service: system
     sources:
       - "WinEventLog:System"
+    fieldmappings:
+      Provider_Name: Provider.Name
   windows-ntlm:
     product: windows
     service: ntlm
@@ -309,6 +315,11 @@ logsources:
     service: printservice-operational
     sources:
       - "WinEventLog:Microsoft-Windows-PrintService/Operational"
+  windows-codeintegrity-operational:
+    product: windows
+    service: codeintegrity-operational
+    sources:
+      - "WinEventLog:Microsoft-Windows-CodeIntegrity/Operational"
   windows-applocker:
     product: windows
     service: applocker

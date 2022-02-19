@@ -4,7 +4,7 @@ description: This rule will monitor executable and script file creation by offic
 references:
     - https://thedfirreport.com/2021/03/29/sodinokibi-aka-revil-ransomware/
     - https://github.com/vadim-hunter/Detection-Ideas-Rules/blob/main/Threat%20Intelligence/The%20DFIR%20Report/20210329_Sodinokibi_(aka_REvil)_Ransomware.yaml
-author: "Vadim Khrykov (ThreatIntel), Cyb3rEng (Rule)"
+author: 'Vadim Khrykov (ThreatIntel), Cyb3rEng (Rule)'
 tags:
     - attack.t1204.002
     - attack.t1047
@@ -13,7 +13,7 @@ tags:
     - attack.defense_evasion
 status: experimental
 date: 2021/08/23
-modified: 2021/11/10
+modified: 2022/02/09
 logsource:
     product: windows
     category: file_event
@@ -26,17 +26,23 @@ detection:
             - 'powerpnt.exe'
     selection2:
         TargetFilename|endswith:
-            - ".exe"
-            - ".dll"
-            - ".ocx"
-            - ".com"
-            - ".ps1"
-            - ".vbs"
-            - ".sys"
-            - ".bat"
-            - ".scr"
-            - ".proj"
-    condition: selection1 and selection2
+            - '.exe'
+            - '.dll'
+            - '.ocx'
+            - '.com'
+            - '.ps1'
+            - '.vbs'
+            - '.sys'
+            - '.bat'
+            - '.scr'
+            - '.proj'
+    filter_webservicecache: # matches e.g. directory with name *.microsoft.com
+        TargetFilename|contains|all:
+            - 'C:\Users\'
+            - '\AppData\Local\Microsoft\Office\'
+            - '\WebServiceCache\AllUsers'
+        TargetFilename|endswith: '.com'
+    condition: selection1 and selection2 and not 1 of filter_*
 falsepositives:
     - Unknown
 level: high

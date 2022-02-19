@@ -4,17 +4,19 @@ status: experimental
 description: Detects a suspicious process creation as SYSTEM user (suspicious program or command line parameter)
 references:
     - Internal Research
-author: Florian Roth
-date: 2021/12/08
+    - https://tools.thehacker.recipes/mimikatz/modules
+author: Florian Roth (rule), David ANDRE (additional keywords)
+date: 2021/12/20
+modified: 2022/02/09
 logsource:
     category: process_creation
     product: windows
 detection:
     selection:
         IntegrityLevel: System
-        User|contains|all: # covers many language settings
-            - 'AUT'
-            - 'SYSTEM' 
+        User|contains: # covers many language settings
+            - 'AUTHORI'
+            - 'AUTORI'
     selection_special:
         - Image|endswith:
             - '\calc.exe'
@@ -46,7 +48,20 @@ detection:
             - '.downloadstring('  # PowerShell download command
             - '.downloadfile('  # PowerShell download command
             - ' /ticket:'  # Rubeus
-            - ' sekurlsa'  # Mimikatz
+            - 'dpapi::'     #Mimikatz
+            - 'event::clear'        #Mimikatz
+            - 'event::drop'     #Mimikatz
+            - 'id::modify'      #Mimikatz
+            - 'kerberos::'       #Mimikatz
+            - 'lsadump::'      #Mimikatz
+            - 'misc::'     #Mimikatz
+            - 'privilege::'       #Mimikatz
+            - 'rpc::'      #Mimikatz
+            - 'sekurlsa::'       #Mimikatz
+            - 'sid::'        #Mimikatz
+            - 'token::'      #Mimikatz
+            - 'vault::cred'     #Mimikatz
+            - 'vault::list'     #Mimikatz
             - ' p::d '  # Mimikatz 
             - ';iex('  # PowerShell IEX
             - 'MiniDump'  # Process dumping method apart from procdump

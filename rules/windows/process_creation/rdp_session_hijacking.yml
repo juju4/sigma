@@ -8,7 +8,7 @@ author: juju4
 date: 2019/05/26
 tags:
     - attack.execution
-    - attack.t1076
+    - attack.t1563.002
 logsource:
     category: process_creation
     product: windows

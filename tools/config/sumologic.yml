@@ -96,12 +96,21 @@ logsources:
     service: msexchange-management
     conditions:
       EventChannel: 'MSExchange Management'
+  windows-firewall-advanced-security:
+    product: windows
+    service: firewall-as
+    conditions:
+      EventChannel: 'Microsoft-Windows-Windows Firewall With Advanced Security/Firewall'
+  windows-bits-client:
+    product: windows
+    service: bits-client
+    conditions:
+      EventChannel: 'Microsoft-Windows-Bits-Client/Operational' 
   apache:
-    product: apache
     service: apache
     index: WEBSERVER
   apache2:
-    product: apache
+    service: apache
     index: WEBSERVER
   webserver:
     category: webserver
@@ -122,7 +131,7 @@ logsources:
     category: proxy
     index: PROXY
   antivirus:
-    product: antivirus
+    category: antivirus
     index: ANTIVIRUS
   application-sql:
     product: sql

@@ -9,14 +9,14 @@ logsource:
   product: windows
   category: wmi_event
 detection:
-  selector:
+  selection:
     EventID:
       - 19
       - 20
       - 21
-  condition: selector
+  condition: selection
 falsepositives:
-  - exclude legitimate (vetted) use of WMI event subscription in your network
+  - Exclude legitimate (vetted) use of WMI event subscription in your network
 level: high
 tags:
   - attack.persistence

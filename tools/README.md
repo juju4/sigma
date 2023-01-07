@@ -8,6 +8,8 @@ This folder contains libraries and the following command line tools:
 
 # Sigmac
 
+<span style="color:red">Sigmac will be deprecated by the end of 2022</span> in favour of [sigma-cli](https://github.com/SigmaHQ/sigma-cli) and [pySigma](https://github.com/SigmaHQ/pySigma). <span style="color:red">Please stop contributing backends</span> to this tool. Limited support is offered until the end of 2023, especially for backends that haven't been migrated yet.
+
 The Sigmac is one of the most important files, as this is what sets the correct fields that your backend/database will use after being translated from the (original) log source's field names.
 Please read below to understand how a SIGMAC is constructed. Additionally, see [Choosing the Right Sigmac](#choosing-the-right-sigmac) for an idea of which file and command line options (if applicable) that will best suite your environment.
 
@@ -371,8 +373,8 @@ with the identifier `datadog-logs`. This query can be used in the Security Monit
 #### Config file
 The Datadog backend does not require a config file.
 If you choose to add one, you can specify tags in addition to the existing features.
-While attributes will be queried with `@my-attribute:attribute_value` specified tags will be queried with `my-tag:service_value`.
-For an example, see `tools/config/datadog.yml`.
+While attributes will be queried with `default_attribute: new_attribute` specified tags will be queried with `new_attribute`.
+For an example, see `tools/config/datadog.yml`, `DemoEventID` will be replaced by `@event.id`.
 
 #### Backend options
 The backend options allow you to override tags such as `index`, `service` and `source`. Note that `index` is not available in the Security Monitoring product.
@@ -380,6 +382,9 @@ The backend options allow you to override tags such as `index`, `service` and `s
 Example
 ```
 tools/sigmac -t datadog-logs ./rules/cloud/aws/aws_attached_malicious_lambda_layer.yml --backend-option index=index_value --backend-option service=service_value
+```
+```
+tools/sigmac -t datadog-logs ./rules/cloud/aws/aws_attached_malicious_lambda_layer.yml --config config/datadog.yml
 ```
 
 #### Tests
@@ -416,3 +421,29 @@ python3 -m tests.test_backend_streamalert
 It will run the StreamAlert backend against all of the rules in the repository and display the number of supported rules.
 
 To receive individual results for each rule, use the `—verbose` parameter.
+
+### DNIF
+The DNIF backend converts Sigma rules to the DNIF queries, with the identifier as `dnif`
+
+The configuration will define the field mappings, value mappings and source mappings. see `tools/config/dnif.yml`
+Example:
+```shell
+tools/sigmac -t dnif -c tools/config/dnif.yml rules/windows/file_event/file_event_win_susp_desktop_ini.yml
+```
+
+ You can preview the rules coverage by running:
+ ```shell
+cd tools/
+python3 -m tests.test_backend_dnif
+```
+
+The test will be executed for all the rules in the repository and display the outcome of the backend rules coverage (i.e. successful, skipped and failed rules).
+
+To see the results, 
+
+use `--success` or `-S` for successful rules, 
+
+use `--skipped` or `-s` for skipped rules,
+
+use `--failed` or `-f` for failed rules.
+

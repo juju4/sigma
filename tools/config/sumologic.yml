@@ -52,7 +52,9 @@ logsources:
     product: windows
     service: powershell
     conditions:
-      EventChannel: Microsoft-Windows-Powershell
+      EventChannel:
+        - Microsoft-Windows-Powershell
+        - PowerShellCore
     index: WINDOWS
   windows-system:
     product: windows
@@ -110,7 +112,39 @@ logsources:
     product: windows
     service: bits-client
     conditions:
-      EventChannel: 'Microsoft-Windows-Bits-Client/Operational' 
+      EventChannel: 'Microsoft-Windows-Bits-Client/Operational'
+  windows-security-mitigations:
+    product: windows
+    service: security-mitigations
+    conditions:
+      EventChannel:
+        - 'Microsoft-Windows-Security-Mitigations/Kernel Mode'
+        - 'Microsoft-Windows-Security-Mitigations/User Mode'
+  windows-diagnosis:
+    product: windows
+    service: diagnosis-scripted
+    conditions:
+      EventChannel: 'Microsoft-Windows-Diagnosis-Scripted/Operational'
+  windows-shell-core:
+    product: windows
+    service: shell-core
+    conditions:
+      EventChannel: 'Microsoft-Windows-Shell-Core/Operational'
+  windows-openssh:
+    product: windows
+    service: openssh
+    conditions:
+      EventChannel: 'OpenSSH/Operational'
+  windows-ldap-debug:
+    product: windows
+    service: ldap_debug
+    conditions:
+      source: 'Microsoft-Windows-LDAP-Client/Debug'
+  windows-bitlocker:
+    product: windows
+    service: bitlocker
+    conditions:
+      source: 'Microsoft-Windows-BitLocker/BitLocker Management'
   apache:
     service: apache
     index: WEBSERVER

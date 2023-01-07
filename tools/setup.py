@@ -1,5 +1,5 @@
 # Setup module for Sigma toolchain
-# derived from example at https://github.com/pypa/sampleproject/blob/master/setup.py
+# derived from example at https://github.com/pypa/sampleproject/blob/918bd331501de42be32666bd5140d04d00b39386/setup.py
 from setuptools import setup, find_packages
 # To use a consistent encoding
 from codecs import open
@@ -14,11 +14,11 @@ with open(path.join(here, 'LONG_DESCRIPTION.md'), encoding='utf-8') as f:
 
 setup(
     name='sigmatools',
-    version='0.21.0',
+    version='0.22.1',
     description='Tools for the Generic Signature Format for SIEM Systems',
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url='https://github.com/Neo23x0/sigma',
+    url='https://github.com/SigmaHQ/sigma',
     author='Sigma Project',
     author_email='thomas@patzke.org',
     license='LGPLv3',

@@ -349,6 +349,7 @@ fieldmappings:
   c-cookie: cookie
   c-ip: id.orig_h
   cs-uri: uri
+  cs-uri-query: uri
   clientip: id.orig_h
   clientIP: id.orig_h
   dest_domain:
@@ -404,7 +405,7 @@ fieldmappings:
     - query
     - server_name
   service.response_code: status_code
-  source: id.orig_h
+#  source: id.orig_h
   SourceAddr: id.orig_h
   SourceAddress: id.orig_h
   SourceIP: id.orig_h

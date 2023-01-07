@@ -6,26 +6,31 @@ references:
     - https://blog.netspi.com/15-ways-to-download-a-file/#bitsadmin
     - https://isc.sans.edu/diary/22264
     - https://lolbas-project.github.io/lolbas/Binaries/Bitsadmin/
+    - https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/ransomware-hive-conti-avoslocker
+    - https://www.cisa.gov/uscert/ncas/alerts/aa22-321a
+author: Florian Roth
+date: 2022/06/28
+modified: 2022/12/02
 tags:
     - attack.defense_evasion
     - attack.persistence
     - attack.t1197
     - attack.s0190
     - attack.t1036.003
-date: 2022/06/28
-author: Florian Roth
 logsource:
     category: process_creation
     product: windows
 detection:
-    selection:
-        Image|endswith: '\bitsadmin.exe'
-        CommandLine|contains: 
+    selection_img:
+        - Image|endswith: '\bitsadmin.exe'
+        - OriginalFileName: 'bitsadmin.exe'
+    selection_flags:
+        CommandLine|contains:
             - ' /transfer '
             - ' /create '
             - ' /addfile '
     selection_domain:
-        CommandLine|contains: 
+        CommandLine|contains:
             - 'raw.githubusercontent.com'
             - 'gist.githubusercontent.com'
             - 'pastebin.com'
@@ -38,7 +43,13 @@ detection:
             - '.ghostbin.co/'
             - 'ufile.io'
             - 'storage.googleapis.com'
-    condition: all of selection*
+            - 'anonfiles.com'
+            - 'send.exploit.in'
+            - 'transfer.sh'
+            - 'privatlab.net'
+            - 'privatlab.com'
+            - 'sendspace.com'
+    condition: all of selection_*
 fields:
     - CommandLine
     - ParentCommandLine

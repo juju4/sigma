@@ -1,10 +1,10 @@
 title: Suspicious Shells Spawn by SQL Server
 id: 869b9ca7-9ea2-4a5a-8325-e80e62f75445
-description: Detects suspicious shell spawn from MSSQL process, this might be sight of RCE or SQL Injection
 status: experimental
+description: Detects suspicious shell spawn from MSSQL process, this might be sight of RCE or SQL Injection
 author: FPT.EagleEye Team, wagga
 date: 2020/12/11
-modified: 2022/03/08
+modified: 2022/07/14
 tags:
     - attack.t1505.003
     - attack.t1190
@@ -22,6 +22,7 @@ detection:
             - '\sh.exe'
             - '\bash.exe'
             - '\powershell.exe'
+            - '\pwsh.exe'
             - '\bitsadmin.exe'
     filter_datev:
         ParentImage|startswith: 'C:\Program Files\Microsoft SQL Server\'

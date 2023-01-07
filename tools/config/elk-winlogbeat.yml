@@ -76,12 +76,44 @@ logsources:
     product: windows
     service: firewall-as
     conditions:
-      log_name: 'Microsoft-Windows-Windows Firewall With Advanced Security/Firewall'      
+      log_name: 'Microsoft-Windows-Windows Firewall With Advanced Security/Firewall'
   windows-bits-client:
     product: windows
     service: bits-client
     conditions:
-      logname: 'Microsoft-Windows-Bits-Client/Operational' 
+      logname: 'Microsoft-Windows-Bits-Client/Operational'
+  windows-security-mitigations:
+    product: windows
+    service: security-mitigations
+    conditions:
+      logname:
+        - 'Microsoft-Windows-Security-Mitigations/Kernel Mode'
+        - 'Microsoft-Windows-Security-Mitigations/User Mode'
+  windows-diagnosis:
+    product: windows
+    service: diagnosis-scripted
+    conditions:
+      logname: 'Microsoft-Windows-Diagnosis-Scripted/Operational'
+  windows-shell-core:
+    product: windows
+    service: shell-core
+    conditions:
+      logname: 'Microsoft-Windows-Shell-Core/Operational'
+  windows-openssh:
+    product: windows
+    service: openssh
+    conditions:
+      logname: 'OpenSSH/Operational'
+  windows-ldap-debug:
+    product: windows
+    service: ldap_debug
+    conditions:
+      logname: 'Microsoft-Windows-LDAP-Client/Debug'
+  windows-bitlocker:
+    product: windows
+    service: bitlocker
+    conditions:
+      logname: 'Microsoft-Windows-BitLocker/BitLocker Management'
 defaultindex: winlogbeat-*
 # Extract all field names with yq:
 # yq -r '.detection | del(.condition) | map(keys) | .[][]' $(find sigma/rules/windows -name '*.yml') | sort -u | grep -v ^EventID$ | sed 's/^\(.*\)/    \1: event_data.\1/g'

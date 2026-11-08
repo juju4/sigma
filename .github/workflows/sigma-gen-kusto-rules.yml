@@ -18,9 +18,12 @@ jobs:
           pip install sigma-cli
       - name: List plugins
         run: |
+          set -x
           sigma plugin list
           sigma list targets
           sigma list pipelines
+          sigma plugin install kusto
+          sigma plugin install sysmon
         if: ${{ always() }}
         continue-on-error: true
       - name: Generate Kusto Rules

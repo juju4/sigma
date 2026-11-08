@@ -1,0 +1,39 @@
+---
+name: Sigma - Generate kusto query
+
+on: [push, pull_request, merge_group, workflow_dispatch]
+
+jobs:
+  yamllint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Set up Python 3.11
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: 3.11
+      - name: Install dependencies
+        run: |
+          pip install pysigma
+          pip install sigma-cli
+      - name: List plugins
+        run: |
+          sigma plugin list
+          sigma list targets
+          sigma list pipelines
+        if: ${{ always() }}
+        continue-on-error: true
+      - name: Generate Kusto Rules
+        run: |
+          sigma convert -t kusto -p sysmon --output-dir translated_rules/ --output-filename-template "{path}/{stem}.kql" sigma/rules/windows/process_creation
+      - name: Check output
+        run: |
+          find translated_rules/ -type f --exec echo "## {}" \; --exec cat {} \;
+      - name: Install the Azure Data Explorer Kusto emulator
+        run: |
+          docker run -e ACCEPT_EULA=Y -m 4G -d -p 8080:8080 -t mcr.microsoft.com/azuredataexplorer/kustainer-linux:latest
+      - name: Check Kusto emulator is running
+        run: |
+          docker ps
+          curl -v -X POST -H 'ContentType: application/json' -d '{"csl":".show cluster"}' http://localhost:8080/v1/rest/mgmt
+        # Need schemas before testing queries
